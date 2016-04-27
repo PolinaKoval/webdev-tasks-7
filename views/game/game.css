@@ -1,0 +1,148 @@
+@import url(https://fonts.googleapis.com/css?family=Neucha&subset=latin,cyrillic);
+
+
+
+.game{
+    display: flex;
+    flex-wrap: wrap;
+    font-family: 'Neucha', cursive;
+    background-color: #f1c40f;
+}
+
+.bars {
+    font: inherit;
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    margin-top: 50px;
+}
+
+.value {
+
+}
+
+#die {
+    opacity: 0;
+}
+
+.bar {
+    background-color: #F5F5F5;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid;
+    margin: 10px;
+    width: 250px;
+    border-radius: 20px;
+}
+
+.bar p {
+    margin: 15px 0;
+}
+
+.bar__title {
+
+}
+
+#speech {
+    font-size: 45px;
+    margin: auto;
+    width: 800px;
+    height: 50px;
+}
+
+.pig {
+    width: 600px;
+    margin: 0 0 0 300px;
+}
+
+.header {
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    margin: auto;
+    padding: 15px;
+    color: #663399;
+}
+
+.title {
+    align-self: center;
+    font-size: 100px;
+    margin-left: 25%;
+}
+
+.restart {
+    letter-spacing: 3px;
+    font-size: 20px;
+    font-family: inherit;
+    background-color: rgba(0, 128, 0, 0.5);
+    display: inline-block;
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    padding: .5em 2em;
+    outline: none;
+    border: 2px solid;
+    border-radius: 1px;
+    transition: 0.2s;
+    width: 200px;
+    height: 50px;
+    margin-right: 1px;
+} 
+
+.restart:hover {
+    background: rgba(255, 6, 0, 0.2);
+}
+
+.restart:active {
+    background: #663399;
+}
+
+.loading {
+    width: 80px;
+    margin: 30px auto;
+    transition: display 1s;
+}
+
+.loading-bar {
+    display: inline-block;
+    width: 10px;
+    height: 60px;
+    margin: 0 3px;
+    border-radius: 4px;
+    animation: loading 1s ease-in-out infinite;
+}
+
+.loading-bar:nth-child(1) {
+    background-color: #3498db;
+    animation-delay: 0;
+}
+
+.loading-bar:nth-child(2) {
+    background-color: #c0392b;
+    animation-delay: 0.09s;
+}
+
+.loading-bar:nth-child(3) {
+    background-color: #f1c40f;
+    animation-delay: .18s;
+}
+
+.loading-bar:nth-child(4) {
+    background-color: #27ae60;
+    animation-delay: .27s;
+}
+
+@keyframes loading {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1, 2.2);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
