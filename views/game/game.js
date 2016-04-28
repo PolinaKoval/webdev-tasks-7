@@ -4,9 +4,9 @@ const Snap = require('snapsvg');
 var currentAction;
 var state = {};
 var animations = [];
-refresh();
 var s = Snap('#pig');
 var recognizer;
+var battery;
 var speekPlace = document.getElementById('speech');
 
 window.onload = () => {
@@ -19,14 +19,21 @@ window.onload = () => {
 }
 
 document.getElementById('restart').addEventListener('click', restart);
-document.getElementById('pigDiv').addEventListener('click', startSpeek);
+document.getElementById('pigDiv').addEventListener('click', onClick);
+
+function onClick(e) {
+    if (state.action === 'sleep') {
+        stopSleep();
+    } else {
+        startSpeek();
+    }
+}
 window.ondevicelight = function(e) {
     if (e.value > 10 || state.action === 'sleep') {
         return;
     }
     if (state.energy === 100) {
-        speekPlace.innerHTML = 'Включи свет, я бодр!';
-        clearSpeech();
+        say('Включи свет, я бодр!');
     } else {
         startSleep();
     }
@@ -42,14 +49,14 @@ function startSleep() {
 function stopSleep() {
     fetch('/stopSleep')
     .then(() => {
-        speekPlace.innerHTML = 'Я проснулся';
-        clearSpeech();
+        say('Я проснулся');
         setNormalAnimations();
     })
 }
 
 
-function initBattery(battery) {
+function initBattery(b) {
+    battery = b;
     battery.onchargingchange = updateCharging;
     battery.onchargingchange();
 }
@@ -59,11 +66,8 @@ function updateCharging() {
 }
 
 function startEat() {
-    if (state.satiety === 100) {
-        return;
-    }
     fetch('./eat')
-    .then(() => refresh())
+    .then(refresh)
     .catch(err => console.log(err));
 }
 
@@ -72,11 +76,14 @@ function stopEat() {
         return;
     }
     fetch('./stopEat')
-    .then(() => refresh())
-    .then(() => {
-        speekPlace.innerHTML = 'Было вкусно!';
-    })
+    .then(refresh)
+    .then(() => say('Было вкусно!'))
     .catch(err => console.log(err));
+}
+
+function say(text) {
+    speekPlace.innerHTML = text;
+    clearSpeech();
 }
 
 function initRecognizer() {
@@ -114,14 +121,17 @@ function refresh() {
         state = data;
         updateIndicators();
         if (!state.alive) {
-            pigDie();
+            setDieAnimations();
             return;
         }
         if (currentAction === state.action) {
             return;
         }
-        clearSpeech(true);
         if (state.action === 'none') {
+            if (battery.charging) {
+                startEat();
+                return;
+            }
             setNormalAnimations();
         }
         if (state.action === 'sleep') {
@@ -134,11 +144,6 @@ function refresh() {
         currentAction = state.action;
     })
     .catch(err => console.log(err));
-}
-
-function pigDie() {
-    setDieAnimations();
-    speekPlace.innerHTML = "Это был хороший Хрюндель(";
 }
 
 function updateIndicators() {
@@ -192,6 +197,7 @@ function noseAnimation() {
 }
 
 function setNormalAnimations() {
+    clearSpeech();
     clearAnimations();
     animations.push(setInterval(eyesAnimation, 4000));
     animations.push(setInterval(earsAnimation, 3000));
@@ -199,6 +205,7 @@ function setNormalAnimations() {
 }
 
 function setSleepAnimations() {
+    clearSpeech(true);
     clearAnimations();
     animations.push(setInterval(noseAnimation, 2000));
     var eyes = s.selectAll(".close");   
@@ -206,11 +213,20 @@ function setSleepAnimations() {
 }
 
 function setEatAnimations() {
+    animations.push(setInterval(eatAnimation, 1500));
+}
+
+function eatAnimation() {
+    if (state.satiety === 100) {
+        speekPlace.innerHTML = 'Я сыт';
+        setNormalAnimations();
+    }
     speekPlace.innerHTML = 'Я кушаю, спасибо';
 }
 
 function setDieAnimations() {
     clearAnimations();
+    speekPlace.innerHTML = "Это был хороший Хрюндель(";
     var leftEye = document.getElementById('left_eye');
     var rightEye = document.getElementById('right_eye');
     leftEye.style.opacity = 0;
@@ -232,14 +248,12 @@ function clearAnimations() {
 }
 
 function startSpeek() {
-    if (state.satiety === 100) {
-        speekPlace.innerHTML = 'Извини, я не хочу с тобой говорить';
-        clearSpeech();
+    if (state.mood === 100) {
+        say('Извини, я не хочу с тобой говорить');
         return;
     }
     if (!recognizer) {
-        speekPlace.innerHTML = 'Извини, я не могу с тобой говорить';
-        clearSpeech();
+        say('Извини, я не могу с тобой говорить');
         return;
     }
     speekPlace.innerHTML = 'Привет, я скучал, чтобы завершить разговор скажи "пока"';
@@ -258,10 +272,7 @@ function printResult(e) {
     state.mood++;
     if (state.mood === 100) {
         recognizer.stop();
-        setTimeout(() => {
-            speekPlace.innerHTML = 'я наговорился, пока';
-            clearSpeech();
-        }, 1000);
+        setTimeout(() => say('я наговорился, пока'), 1000);
     }
 }
 
