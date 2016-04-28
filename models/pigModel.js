@@ -44,6 +44,9 @@ exports.increaseMood = () => {
 }
 
 exports.sleep = () => {
+    if (currentState.action === 'eat') {
+        stopEat();
+    }
     if (currentState.energy >= 100) {
         return stopSleep();
     }
@@ -59,6 +62,9 @@ exports.stopSleep = () => {
 }
 
 exports.eat = () => {
+    if (currentState.action === 'sleep') {
+        stopSleep();
+    }
     if (currentState.energy >= 100) {
         return currentState;
     }

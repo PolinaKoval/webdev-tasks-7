@@ -29,6 +29,7 @@ function onClick(e) {
     }
 }
 window.ondevicelight = function(e) {
+    console.log(e.value);
     if (e.value > 10 || state.action === 'sleep') {
         return;
     }
@@ -130,9 +131,7 @@ function refresh() {
         if (state.action === 'none') {
             if (battery.charging) {
                 startEat();
-                return;
             }
-            setNormalAnimations();
         }
         if (state.action === 'sleep') {
             setSleepAnimations();
@@ -214,6 +213,9 @@ function setSleepAnimations() {
 
 function setEatAnimations() {
     animations.push(setInterval(eatAnimation, 1500));
+    animations.push(setInterval(eyesAnimation, 4000));
+    animations.push(setInterval(earsAnimation, 3000));
+    animations.push(setInterval(noseAnimation, 2000));
 }
 
 function eatAnimation() {

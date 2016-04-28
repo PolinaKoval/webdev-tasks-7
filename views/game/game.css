@@ -1,8 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Neucha&subset=latin,cyrillic);
 
+body {
+    height: 100%;
+    background-color: #f1c40f;
+}
 
-
-.game{
+.game {
     display: flex;
     flex-wrap: wrap;
     font-family: 'Neucha', cursive;
