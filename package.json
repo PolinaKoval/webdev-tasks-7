@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "start": "npm run build && npm node ./bin/www"
+    "start": "npm run build && node ./bin/www"
   },
   "dependencies": {
     "autoprefixer": "^6.3.5",
