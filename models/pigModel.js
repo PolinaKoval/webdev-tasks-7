@@ -24,9 +24,9 @@ exports.getCurrentState = () => {
 exports.restart = () => {
     currentState = {
         action: 'none',
-        satiety: 2,
-        energy: 2,
-        mood: 2,
+        satiety: 80,
+        energy: 80,
+        mood: 80,
         alive: true
     };
 }
