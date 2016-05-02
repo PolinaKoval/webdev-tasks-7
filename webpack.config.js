@@ -22,10 +22,6 @@ module.exports = {
                 loader: ExtractTextPlugin.extract("style-loader", "css-loader")
             },
             {
-                test: /\.jpe?g$|\.svgs$/i,
-                loader: 'file-loader'
-            },
-            {
                 test: /\.js?$/,
                 exclude: /node_modules/,
                 loader: 'babel'

@@ -7,21 +7,28 @@ var animations = [];
 var s = Snap('#pig');
 var recognizer;
 var battery;
+var hidden;
+var visibilityChange;
 var speekPlace = document.getElementById('speech');
+var sayId;
 
 window.onload = () => {
     loader(false);
     initRecognizer();
+    initHidden();
     navigator
     .getBattery()
     .then(initBattery);
     setInterval(refresh, 2000);
-}
+};
 
 document.getElementById('restart').addEventListener('click', restart);
 document.getElementById('pigDiv').addEventListener('click', onClick);
+document.getElementById('incVol').addEventListener('click', increaseVol);
+document.getElementById('decVol').addEventListener('click', decreaseVol);
 
-function onClick(e) {
+
+function onClick() {
     if (state.action === 'sleep') {
         stopSleep();
     } else {
@@ -40,7 +47,6 @@ window.ondevicelight = function(e) {
     }
 };
 
-
 function startSleep() {
     fetch('/sleep')
     .then(() => setSleepAnimations())
@@ -55,15 +61,35 @@ function stopSleep() {
     })
 }
 
-
 function initBattery(b) {
     battery = b;
     battery.onchargingchange = updateCharging;
     battery.onchargingchange();
 }
 
+function initHidden() {
+    if (typeof document.hidden !== "undefined") {
+        hidden = "hidden";
+        visibilityChange = "visibilitychange";
+    } else if (typeof document.mozHidden !== "undefined") {
+        hidden = "mozHidden";
+        visibilityChange = "mozvisibilitychange";
+    } else if (typeof document.msHidden !== "undefined") {
+        hidden = "msHidden";
+        visibilityChange = "msvisibilitychange";
+    } else if (typeof document.webkitHidden !== "undefined") {
+        hidden = "webkitHidden";
+        visibilityChange = "webkitvisibilitychange";
+    }
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
+}
+
 function updateCharging() {
     this.charging ?  startEat() : stopEat();
+}
+
+function handleVisibilityChange() {
+    document[hidden] ? startSleep() : stopSleep();
 }
 
 function startEat() {
@@ -83,6 +109,7 @@ function stopEat() {
 }
 
 function say(text) {
+    clearTimeout(sayId);
     speekPlace.innerHTML = text;
     clearSpeech();
 }
@@ -100,6 +127,7 @@ function initRecognizer() {
 }
 
 function restart(event) {
+    currentAction = null;
     clearSpeech(true);
     fetch('/restart')
     .then(() => refresh())
@@ -131,6 +159,8 @@ function refresh() {
         if (state.action === 'none') {
             if (battery.charging) {
                 startEat();
+            } else {
+                setNormalAnimations();
             }
         }
         if (state.action === 'sleep') {
@@ -195,9 +225,29 @@ function noseAnimation() {
     );
 }
 
+function decreaseVol() {
+    var player = document.getElementById('player');
+    var oldVol = player.volume;
+    player.volume = Math.max(oldVol -= 0.2, 0);
+    say('Я буду говорить с громкость ' + player.volume.toFixed(1));
+}
+
+function increaseVol() {
+    var player = document.getElementById('player');
+    var oldVol = player.volume;
+    player.volume = Math.min(oldVol += 0.2, 1);
+    say('Я буду говорить с громкость ' + player.volume.toFixed(1));
+}
+
+function pigSound() {
+    var player = document.getElementById('player');
+    player.play();
+}
+
 function setNormalAnimations() {
     clearSpeech();
     clearAnimations();
+    animations.push(setInterval(pigSound, 8000));
     animations.push(setInterval(eyesAnimation, 4000));
     animations.push(setInterval(earsAnimation, 3000));
     animations.push(setInterval(noseAnimation, 2000));
@@ -212,6 +262,8 @@ function setSleepAnimations() {
 }
 
 function setEatAnimations() {
+    clearSpeech(true);
+    clearAnimations();
     animations.push(setInterval(eatAnimation, 1500));
     animations.push(setInterval(eyesAnimation, 4000));
     animations.push(setInterval(earsAnimation, 3000));
@@ -278,8 +330,8 @@ function printResult(e) {
     }
 }
 
-function clearSpeech(inmoment) {    
-    setTimeout(() => {
+function clearSpeech(inmoment) {
+    sayId = setTimeout(() => {
             document.getElementById('speech').innerHTML = ""
     }, inmoment ? 0 : 2000);
 }

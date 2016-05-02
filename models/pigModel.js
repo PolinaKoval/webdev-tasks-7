@@ -24,15 +24,16 @@ exports.getCurrentState = () => {
 exports.restart = () => {
     currentState = {
         action: 'none',
-        satiety: 100,
-        energy: 100,
-        mood: 100,
+        satiety: 2,
+        energy: 2,
+        mood: 2,
         alive: true
     };
 }
 
 exports.increaseMood = () => {
     if (currentState.mood >= 100) {
+        stopEat();
         currentState.action = 'none';
         return currentState;
     }
@@ -55,11 +56,13 @@ exports.sleep = () => {
     return currentState;
 }
 
-exports.stopSleep = () => {
+function stopSleep() {
     currentState.action = 'none';
     clearInterval(sleepId);
     return currentState;
 }
+
+exports.stopSleep = stopSleep;
 
 exports.eat = () => {
     if (currentState.action === 'sleep') {
@@ -73,11 +76,14 @@ exports.eat = () => {
     return currentState;
 }
 
-exports.stopEat = () => {
+function stopEat() {
+    console.log('stopEat');
     currentState.action = 'none';
     clearInterval(eatId);
     return currentState;
 }
+
+exports.stopEat = stopEat;
 
 function increaseIndicator(indicator) {
     if (currentState[indicator] < 100 && currentState.action !== 'none') {

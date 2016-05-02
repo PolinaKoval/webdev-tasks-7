@@ -5,6 +5,20 @@ body {
     background-color: #f1c40f;
 }
 
+.controls {
+    font-size: 50px;
+    margin: 20px 20px;
+}
+
+#decVol,
+#incVol {
+    cursor: pointer;
+}
+
+audio {
+    display: none;
+}
+
 .game {
     display: flex;
     flex-wrap: wrap;
