@@ -1,16 +1,16 @@
 require('./game.css');
 const Snap = require('snapsvg');
+const snap = Snap('#pig');
 
-var currentAction;
-var state = {};
-var animations = [];
-var s = Snap('#pig');
-var recognizer;
-var battery;
-var hidden;
-var visibilityChange;
-var speekPlace = document.getElementById('speech');
-var sayId;
+let currentAction;
+let state = {};
+let animations = [];
+let recognizer;
+let battery;
+let hidden;
+let visibilityChange;
+let speekPlace = document.getElementById('speech');
+let sayId;
 
 window.onload = () => {
     loader(false);
@@ -35,7 +35,7 @@ function onClick() {
         startSpeek();
     }
 }
-window.ondevicelight = function(e) {
+window.ondevicelight = e => {
     console.log(e.value);
     if (e.value > 10 || state.action === 'sleep') {
         return;
@@ -115,7 +115,7 @@ function say(text) {
 }
 
 function initRecognizer() {
-    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(!SpeechRecognition) {
         return;
     }
@@ -135,7 +135,7 @@ function restart(event) {
 }
 
 function loader(display) {
-    var loader = document.getElementsByClassName('loading')[0];
+    let loader = document.getElementsByClassName('loading')[0];
     if (display) {
         loader.style.display = 'block';
     } else {
@@ -176,11 +176,11 @@ function refresh() {
 }
 
 function updateIndicators() {
-    var energy = document.getElementById('energy-value');
+    let energy = document.getElementById('energy-value');
     energy.innerHTML = state.alive ? state.energy : 0;
-    var mood = document.getElementById('mood-value');
+    let mood = document.getElementById('mood-value');
     mood.innerHTML = state.alive ? state.mood : 0;
-    var satiety = document.getElementById('satiety-value');
+    let satiety = document.getElementById('satiety-value');
     satiety.innerHTML = state.alive ? state.satiety : 0;
 }
 
@@ -199,7 +199,7 @@ function increaseMood() {
 }
 
 function eyesAnimation() {
-    var eyes = s.selectAll(".close");   
+    let eyes = snap.selectAll(".close");
     eyes.forEach(elem => elem.animate({ 'fill-opacity': 1 }, 10,
         mina.easein, 
         () => setTimeout(() => 
@@ -208,7 +208,7 @@ function eyesAnimation() {
 }
 
 function earsAnimation() {
-    var leftEar = s.select('#left_ear');
+    let leftEar = snap.select('#left_ear');
     leftEar.animate({ transform: 'r45, 290, 206' }, 1000,
         mina.linear,
         () => setTimeout(() => 
@@ -217,7 +217,7 @@ function earsAnimation() {
 }
 
 function noseAnimation() {
-    var nose = s.select('#nose');
+    let nose = snap.select('#nose');
     nose.animate({ transform: 'translate(7,6) scale(0.98)' }, 500,
         mina.linear,
         () => setTimeout(() => 
@@ -226,21 +226,21 @@ function noseAnimation() {
 }
 
 function decreaseVol() {
-    var player = document.getElementById('player');
-    var oldVol = player.volume;
+    let player = document.getElementById('player');
+    let oldVol = player.volume;
     player.volume = Math.max(oldVol -= 0.2, 0);
     say('Я буду говорить с громкость ' + player.volume.toFixed(1));
 }
 
 function increaseVol() {
-    var player = document.getElementById('player');
-    var oldVol = player.volume;
+    let player = document.getElementById('player');
+    let oldVol = player.volume;
     player.volume = Math.min(oldVol += 0.2, 1);
     say('Я буду говорить с громкость ' + player.volume.toFixed(1));
 }
 
 function pigSound() {
-    var player = document.getElementById('player');
+    let player = document.getElementById('player');
     player.play();
 }
 
@@ -257,7 +257,7 @@ function setSleepAnimations() {
     clearSpeech(true);
     clearAnimations();
     animations.push(setInterval(noseAnimation, 2000));
-    var eyes = s.selectAll(".close");   
+    let eyes = snap.selectAll(".close");
     eyes.forEach(elem => elem.attr({ 'fill-opacity': 1 }));
 }
 
@@ -281,20 +281,20 @@ function eatAnimation() {
 function setDieAnimations() {
     clearAnimations();
     speekPlace.innerHTML = "Это был хороший Хрюндель(";
-    var leftEye = document.getElementById('left_eye');
-    var rightEye = document.getElementById('right_eye');
+    let leftEye = document.getElementById('left_eye');
+    let rightEye = document.getElementById('right_eye');
     leftEye.style.opacity = 0;
     rightEye.style.opacity = 0;
-    var dieEyes = document.getElementById('die');
+    let dieEyes = document.getElementById('die');
     dieEyes.style.opacity = 1;
 }
 
 function clearAnimations() {
-    var leftEye = document.getElementById('left_eye');
-    var rightEye = document.getElementById('right_eye');
+    let leftEye = document.getElementById('left_eye');
+    let rightEye = document.getElementById('right_eye');
     leftEye.style.opacity = 1;
     rightEye.style.opacity = 1;
-    var dieEyes = document.getElementById('die');
+    let dieEyes = document.getElementById('die');
     dieEyes.style.opacity = 0;
     animations.forEach(animId =>
         clearInterval(animId));
@@ -315,8 +315,8 @@ function startSpeek() {
 }
 
 function printResult(e) {
-    var index = e.resultIndex;
-    var result = e.results[index][0].transcript.trim();
+    let index = e.resultIndex;
+    let result = e.results[index][0].transcript.trim();
     speekPlace.innerHTML = result;
     if (result.toLowerCase() === 'пока') {
         recognizer.stop();

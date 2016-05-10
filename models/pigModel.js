@@ -100,19 +100,19 @@ function increaseIndicator(indicator) {
 
 function decreaseIndicators() {
     let emptyIndicators = 0;
-    if (currentState.action !== 'sleep' && currentState.energy >= 0) {
+    if (currentState.action !== 'sleep' && currentState.energy > 0) {
         currentState.energy--;
         if (currentState.energy === 0) {
             emptyIndicators++;
         }
     }
-    if (currentState.action !== 'speek' && currentState.mood >= 0) {
+    if (currentState.action !== 'speek' && currentState.mood > 0) {
         currentState.mood--;
         if (currentState.mood === 0) {
             emptyIndicators++;
         }
     }
-    if (currentState.action !== 'eat' && currentState.satiety >= 0) {
+    if (currentState.action !== 'eat' && currentState.satiety > 0) {
         currentState.satiety--;
         if (currentState.satiety === 0) {
             emptyIndicators++;

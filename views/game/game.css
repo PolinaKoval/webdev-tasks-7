@@ -134,12 +134,12 @@ audio {
 
 .loading-bar:nth-child(1) {
     background-color: #3498db;
-    animation-delay: 0;
+    animation-delay: 0s;
 }
 
 .loading-bar:nth-child(2) {
     background-color: #c0392b;
-    animation-delay: 0.09s;
+    animation-delay: .09s;
 }
 
 .loading-bar:nth-child(3) {
