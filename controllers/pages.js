@@ -1,5 +1,5 @@
 exports.index = (req, res) => {
-	res.render('game/game');
+    res.render('game/game');
 };
 
 exports.error404 = (req, res) => {

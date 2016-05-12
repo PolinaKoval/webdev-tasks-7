@@ -2,9 +2,9 @@
 
 let currentState = {
     action: 'none',
-    satiety: 90,
-    energy: 90,
-    mood: 90,
+    satiety: 50,
+    energy: 50,
+    mood: 50,
     alive: true
 };
 
@@ -12,24 +12,24 @@ let speekId;
 let eatId;
 let sleepId;
 
-let decreaseId = setInterval(function() {
-  decreaseIndicators();
-}, 10000);
+let decreaseId = setInterval(function () {
+    decreaseIndicators();
+}, 5000);
 
 exports.getCurrentState = () => {
     //console.log(currentState);
     return currentState;
-}
+};
 
 exports.restart = () => {
     currentState = {
         action: 'none',
-        satiety: 80,
-        energy: 80,
-        mood: 80,
+        satiety: 50,
+        energy: 50,
+        mood: 50,
         alive: true
     };
-}
+};
 
 exports.increaseMood = () => {
     if (currentState.mood >= 100) {
@@ -42,7 +42,7 @@ exports.increaseMood = () => {
     speekId = setTimeout(() => currentState.action = 'none', 4000);
     currentState.mood++;
     return currentState;
-}
+};
 
 exports.sleep = () => {
     if (currentState.action === 'eat') {
@@ -52,9 +52,9 @@ exports.sleep = () => {
         return stopSleep();
     }
     currentState.action = 'sleep';
-    sleepId = setInterval(increaseIndicator, 3000, 'energy');
+    sleepId = setInterval(increaseIndicator, 2000, 'energy');
     return currentState;
-}
+};
 
 function stopSleep() {
     currentState.action = 'none';
@@ -72,9 +72,9 @@ exports.eat = () => {
         return currentState;
     }
     currentState.action = 'eat';
-    eatId = setInterval(increaseIndicator, 3000, 'satiety');
+    eatId = setInterval(increaseIndicator, 2000, 'satiety');
     return currentState;
-}
+};
 
 function stopEat() {
     console.log('stopEat');

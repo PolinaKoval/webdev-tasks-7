@@ -35,11 +35,15 @@ audio {
     margin-top: 50px;
 }
 
-.value {
-
+#die {
+    opacity: 0;
 }
 
-#die {
+#left_cheek {
+    opacity: 0;
+}
+
+#right_cheek {
     opacity: 0;
 }
 
